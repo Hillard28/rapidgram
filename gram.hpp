@@ -5,47 +5,29 @@
 #include <numeric>
 #include <cmath>
 
-std::vector<std::string> bigram(std::string initial_str) {
-    int len = initial_str.size();
-    std::vector<std::string> tokens;
-    for (int i = 0; i < len-1; i += 1){
-        tokens.push_back(initial_str.substr(i, 2));
+double similarity(std::string string1, std::string string2) {
+    std::vector<std::pair<char, char>> s1, s2, sunion;
+    for (int i = 0; i < string1.size()-1; i += 1){
+        s1.push_back(std::pair<char, char>(string1.at(i), string1.at(i+1)));
     }
-    return tokens;
-}
-
-std::vector<std::string> vsunion(std::vector<std::string> s1, std::vector<std::string> s2) {
-    std::vector<std::string> union_str(s1);
-    union_str.insert(union_str.end(), s2.begin(), s2.end());
-    std::sort(union_str.begin(), union_str.end());
-    union_str.erase(std::unique(union_str.begin(), union_str.end()), union_str.end());
-    return union_str;
-}
-
-std::vector<int> ufreq(std::vector<std::string> u, std::vector<std::string> s) {
-    int len = u.size();
-    std::vector<int> vfreq;
-    for (int i = 0; i < len; i += 1){
-        int freq = std::count(s.begin(), s.end(), u[i]);
-        vfreq.push_back(freq);
+    sunion = s1;
+    for (int i = 0; i < string2.size()-1; i += 1){
+        s2.push_back(std::pair<char, char>(string2.at(i), string2.at(i+1)));
+        sunion.push_back(std::pair<char, char>(string2.at(i), string2.at(i+1)));
     }
-    return vfreq;
-}
 
-float jaccard(std::vector<int> f1, std::vector<int> f2) {
-    float num = std::inner_product(f1.begin(), f1.end(), f2.begin(), 0.0);
-    float den1 = std::inner_product(f1.begin(), f1.end(), f1.begin(), 0.0);
-    float den2 = std::inner_product(f2.begin(), f2.end(), f2.begin(), 0.0);
-    float jacc = num / std::sqrt(den1 * den2);
+    std::sort(sunion.begin(), sunion.end());
+    sunion.erase(std::unique(sunion.begin(), sunion.end()), sunion.end());
+
+    std::vector<int> f1, f2;
+    for (int i = 0; i < sunion.size(); i += 1){
+        f1.push_back(std::count(s1.begin(), s1.end(), sunion[i]));
+        f2.push_back(std::count(s2.begin(), s2.end(), sunion[i]));
+    }
+
+    double jacc = std::inner_product(f1.begin(), f1.end(), f2.begin(), 0.0)
+    / std::sqrt(std::inner_product(f1.begin(), f1.end(), f1.begin(), 0.0)
+    * std::inner_product(f2.begin(), f2.end(), f2.begin(), 0.0));
+    
     return jacc;
-}
-
-float similarity(std::string string1, std::string string2) {
-    std::vector<std::string> new_str = bigram(string1);
-    std::vector<std::string> new_str2 = bigram(string2);
-    std::vector<std::string> union_str = vsunion(new_str, new_str2);
-    std::vector<int> freq1 = ufreq(union_str, new_str);
-    std::vector<int> freq2 = ufreq(union_str, new_str2);
-    float score = jaccard(freq1, freq2);
-    return score;
 }
