@@ -1227,7 +1227,7 @@ static PyObject *__pyx_codeobj__2;
  *     float similarity(string, string) nogil
  * 
  * def gram(s1, s2):             # <<<<<<<<<<<<<<
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:
  */
 
@@ -1315,26 +1315,26 @@ static PyObject *__pyx_pf_4gram_gram(CYTHON_UNUSED PyObject *__pyx_self, PyObjec
   /* "gram.pyx":9
  * 
  * def gram(s1, s2):
- *     if len(s1) == 1 or len(s2) == 1:             # <<<<<<<<<<<<<<
+ *     if len(s1) <= 1 or len(s2) <= 1:             # <<<<<<<<<<<<<<
  *         if s1 == s2 and len(s1) != 0:
  *             return 1.0
  */
   __pyx_t_2 = PyObject_Length(__pyx_v_s1); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 9, __pyx_L1_error)
-  __pyx_t_3 = ((__pyx_t_2 == 1) != 0);
+  __pyx_t_3 = ((__pyx_t_2 <= 1) != 0);
   if (!__pyx_t_3) {
   } else {
     __pyx_t_1 = __pyx_t_3;
     goto __pyx_L4_bool_binop_done;
   }
   __pyx_t_2 = PyObject_Length(__pyx_v_s2); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 9, __pyx_L1_error)
-  __pyx_t_3 = ((__pyx_t_2 == 1) != 0);
+  __pyx_t_3 = ((__pyx_t_2 <= 1) != 0);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
     /* "gram.pyx":10
  * def gram(s1, s2):
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:             # <<<<<<<<<<<<<<
  *             return 1.0
  *         else:
@@ -1354,7 +1354,7 @@ static PyObject *__pyx_pf_4gram_gram(CYTHON_UNUSED PyObject *__pyx_self, PyObjec
     if (__pyx_t_1) {
 
       /* "gram.pyx":11
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:
  *             return 1.0             # <<<<<<<<<<<<<<
  *         else:
@@ -1367,7 +1367,7 @@ static PyObject *__pyx_pf_4gram_gram(CYTHON_UNUSED PyObject *__pyx_self, PyObjec
 
       /* "gram.pyx":10
  * def gram(s1, s2):
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:             # <<<<<<<<<<<<<<
  *             return 1.0
  *         else:
@@ -1391,7 +1391,7 @@ static PyObject *__pyx_pf_4gram_gram(CYTHON_UNUSED PyObject *__pyx_self, PyObjec
     /* "gram.pyx":9
  * 
  * def gram(s1, s2):
- *     if len(s1) == 1 or len(s2) == 1:             # <<<<<<<<<<<<<<
+ *     if len(s1) <= 1 or len(s2) <= 1:             # <<<<<<<<<<<<<<
  *         if s1 == s2 and len(s1) != 0:
  *             return 1.0
  */
@@ -1453,7 +1453,7 @@ static PyObject *__pyx_pf_4gram_gram(CYTHON_UNUSED PyObject *__pyx_self, PyObjec
  *     float similarity(string, string) nogil
  * 
  * def gram(s1, s2):             # <<<<<<<<<<<<<<
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:
  */
 
@@ -1605,7 +1605,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *     float similarity(string, string) nogil
  * 
  * def gram(s1, s2):             # <<<<<<<<<<<<<<
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:
  */
   __pyx_tuple_ = PyTuple_Pack(2, __pyx_n_s_s1, __pyx_n_s_s2); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 8, __pyx_L1_error)
@@ -1896,7 +1896,7 @@ if (!__Pyx_RefNanny) {
  *     float similarity(string, string) nogil
  * 
  * def gram(s1, s2):             # <<<<<<<<<<<<<<
- *     if len(s1) == 1 or len(s2) == 1:
+ *     if len(s1) <= 1 or len(s2) <= 1:
  *         if s1 == s2 and len(s1) != 0:
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4gram_1gram, NULL, __pyx_n_s_gram); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)

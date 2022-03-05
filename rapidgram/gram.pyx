@@ -6,7 +6,7 @@ cdef extern from "gram.hpp":
     float similarity(string, string) nogil
 
 def gram(s1, s2):
-    if len(s1) == 1 or len(s2) == 1:
+    if len(s1) <= 1 or len(s2) <= 1:
         if s1 == s2 and len(s1) != 0:
             return 1.0
         else:
