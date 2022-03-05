@@ -2,6 +2,7 @@
 Tool for processing strings prior to fuzzy matching with fuzzygram
 """
 import re
+import unicodedata
 
 def stn_firm(target, unabbreviate=False, noordinal=True, nolegal=False, parentheses=False):
     symbols = [
@@ -277,3 +278,48 @@ def stn_phone(target):
     
     else:
         return target
+
+def soundex(target):
+
+    if not target:
+        return ""
+
+    target = unicodedata.normalize("NFKD", target)
+    target = target.upper()
+
+    replacements = (
+        ("BFPV", "1"),
+        ("CGJKQSXZ", "2"),
+        ("DT", "3"),
+        ("L", "4"),
+        ("MN", "5"),
+        ("R", "6"),
+    )
+    result = [target[0]]
+    count = 1
+
+    # find would-be replacment for first character
+    for lset, sub in replacements:
+        if target[0] in lset:
+            last = sub
+            break
+    else:
+        last = None
+
+    for letter in target[1:]:
+        for lset, sub in replacements:
+            if letter in lset:
+                if sub != last:
+                    result.append(sub)
+                    count += 1
+                last = sub
+                break
+        else:
+            if letter != "H" and letter != "W":
+                # leave last alone if middle letter is H or W
+                last = None
+        if count == 4:
+            break
+
+    result += "0" * (4 - count)
+    return "".join(result)
