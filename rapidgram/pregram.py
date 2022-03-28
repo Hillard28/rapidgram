@@ -212,20 +212,20 @@ def stn_street(target):
             retarget = re.sub(" [0-9]+\s*$", "", retarget)
         
         # Abbreviate cardinal directions
-        re.sub(" NORTH( |$)", " E ", retarget)
-        re.sub(" EAST( |$)", " E ", retarget)
-        re.sub(" SOUTH( |$)", " E ", retarget)
-        re.sub(" WEST( |$)", " E ", retarget)
+        retarget = re.sub(" NORTH( |$)", " N ", retarget)
+        retarget = re.sub(" EAST( |$)", " E ", retarget)
+        retarget = re.sub(" SOUTH( |$)", " S ", retarget)
+        retarget = re.sub(" WEST( |$)", " W ", retarget)
         
-        re.sub(" NORTHEAST( |$)", " E ", retarget)
-        re.sub(" NORTH EAST( |$)", " E ", retarget)
-        re.sub(" SOUTHEAST( |$)", " E ", retarget)
-        re.sub(" SOUTH EAST( |$)", " E ", retarget)
+        retarget = re.sub(" NORTHEAST( |$)", " NE ", retarget)
+        retarget = re.sub(" NORTH EAST( |$)", " NE ", retarget)
+        retarget = re.sub(" SOUTHEAST( |$)", " SE ", retarget)
+        retarget = re.sub(" SOUTH EAST( |$)", " SE ", retarget)
         
-        re.sub(" NORTHWEST( |$)", " E ", retarget)
-        re.sub(" NORTH WEST( |$)", " E ", retarget)
-        re.sub(" SOUTHWEST( |$)", " E ", retarget)
-        re.sub(" SOUTH WEST( |$)", " E ", retarget)
+        retarget = re.sub(" NORTHWEST( |$)", " NW ", retarget)
+        retarget = re.sub(" NORTH WEST( |$)", " NW ", retarget)
+        retarget = re.sub(" SOUTHWEST( |$)", " SW ", retarget)
+        retarget = re.sub(" SOUTH WEST( |$)", " SW ", retarget)
         
         # Remove only numbers
         if retarget.isdigit() == True:
