@@ -1,5 +1,5 @@
 """
-Tool for processing strings prior to fuzzy matching with fuzzygram
+Tool for processing strings prior to fuzzy matching with rapidgram
 """
 import re
 import unicodedata
@@ -278,6 +278,151 @@ def stn_phone(target):
     
     else:
         return target
+
+def stn_names(target, drop=False, fl=True, comma=False):
+    first = ""
+    middle = ""
+    last = ""
+    suffix = ""
+    credentials = ""
+    
+    symbols = [
+        ".",
+        ":",
+        ";",
+        "(",
+        ")",
+        "*",
+        "\\",
+        "-",
+        "?",
+        "\'",
+        "\"",
+        "[",
+        "]",
+        "{",
+        "}",
+        "!",
+        "_",
+        "/",
+        "`",
+        "<",
+        ">"
+    ]
+    
+    credentials_list = [
+        "CPA",
+        "DR",
+        "ESQ",
+        "MBA",
+        "MD",
+        "PHD"
+    ]
+    
+    suffix_list = [
+        "SR",
+        "JR",
+        "II",
+        "III",
+        "IV"
+    ]
+    
+    if type(target) is str:
+        # Convert to uppercase
+        retarget = target.upper()
+        
+        # Remove symbols
+        for symbol in symbols:
+            retarget = retarget.replace(symbol, "").strip()
+            retarget = " ".join(retarget.split())
+        
+        # Remove MRS|MR|Owner at end
+        if re.search("[A-Z]?(MRS|MR|OWNER)$", retarget) is not None:
+            retarget = re.sub("(MRS|MR|OWNER)$", "", retarget)
+            retarget = " ".join(retarget.split())
+        
+        # Extract credentials
+        for credential in credentials_list:
+            if re.search(" [A-Z]?" + credential + "$", retarget) is not None:
+                credentials = credentials + " " + credential
+                retarget = re.sub(credential + "$", "", retarget)
+            elif re.search(" " + credential + " ", retarget) is not None:
+                credentials = credentials + " " + credential
+                retarget = re.sub(" " + credential + " ", " ", retarget)
+        if re.search(" [A-Z]?JD$", retarget) is not None:
+            credentials = credentials + " " + "JD"
+            retarget = re.sub("JD$", "", retarget)
+        
+        # Extract suffixes
+        for suff in suffix_list:
+            if re.search(" [A-Z]?" + suff + "$", retarget) is not None and re.search(" ZIV$", retarget) is None:
+                suffix = suffix + " " + suff
+                suffix = suffix.strip()
+                retarget = re.sub(suff + "$", "", retarget).strip()
+            elif re.search(" " + suff + "[, ]", retarget) is not None and re.search(" ZIV$", retarget) is None:
+                suffix = suffix + " " + suff
+                retarget = re.sub(" " + suff + "[, ]", ", ", retarget)
+                retarget = " ".join(retarget.split())
+        
+        if comma == False:
+            retarget = retarget.replace(",", "")
+        
+        # Extract names
+        if comma and fl == False:
+            search = re.search("^([^,]+)", retarget)
+            if search is not None:
+                last = search[0]
+                retarget = re.sub("^([^,]+)", ", ", retarget)
+            
+            search = re.search("^([^,]+)", retarget)
+            if search is not None:
+                first = search[0]
+                retarget = re.sub("^([^,]+)(, |$)", "", retarget)
+            
+            search = re.search("[^, ]+)$", retarget)
+            if search is not None:
+                middle = search[0]
+        
+        elif comma == False and fl == False:
+            search = re.search("^((DE LA|DE LOS|DE|DI|ST|VAN DER|VAN|VON)? ?[-'A-Z]+)", retarget)
+            if search is not None:
+                last = search[0]
+                retarget = retarget.replace(last, "", 1).strip()
+            
+            search = re.search("^([-'A-Z]+)", retarget)
+            if search is not None:
+                first = search[0]
+            
+            middle = retarget.replace(first, "", 1).strip()
+        
+        elif fl:
+            search = re.search("^([-'A-Z]+)", retarget)
+            if search is not None:
+                first = search[0]
+                retarget = re.sub("^[-'A-Z]+ ", " ", retarget)
+            
+            search = re.search(" ((DE LA|DE LOS|DE|DI|ST|VAN DER|VAN|VON)? ?[-'A-Z]+)$", retarget)
+            if search is not None:
+                last = search[0]
+                retarget = retarget.replace(last, "", 1).strip()
+            
+            middle = retarget
+        
+        # Strip white space
+        first = first.strip()
+        first = " ".join(first.split())
+        middle = middle.strip()
+        middle = " ".join(middle.split())
+        last = last.strip()
+        last = " ".join(last.split())
+        suffix = suffix.strip()
+        suffix = " ".join(suffix.split())
+        credentials = credentials.strip()
+        
+        if drop:
+            return first + " " + middle + " " + last + " " + suffix
+        else:
+            return [first, middle, last, suffix, credentials]
 
 def soundex(target):
 
