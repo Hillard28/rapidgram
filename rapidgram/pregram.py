@@ -1,5 +1,5 @@
 """
-Tool for processing strings prior to fuzzy matching with rapidgram
+Tool for processing strings prior to fuzzy matching with fuzzygram
 """
 import re
 import unicodedata
@@ -279,7 +279,7 @@ def stn_phone(target):
     else:
         return target
 
-def stn_names(target, drop=False, fl=True, comma=False):
+def stn_full_name(target, drop=False, fl=True, comma=False, whitespace=True):
     first = ""
     middle = ""
     last = ""
@@ -322,9 +322,9 @@ def stn_names(target, drop=False, fl=True, comma=False):
     suffix_list = [
         "SR",
         "JR",
-        "II",
+        "IV",
         "III",
-        "IV"
+        "II"
     ]
     
     if type(target) is str:
@@ -413,8 +413,10 @@ def stn_names(target, drop=False, fl=True, comma=False):
         first = " ".join(first.split())
         middle = middle.strip()
         middle = " ".join(middle.split())
-        last = last.strip()
-        last = " ".join(last.split())
+        if whitespace:
+            last = " ".join(last.split())
+        else:
+            last = "".join(last.split())
         suffix = suffix.strip()
         suffix = " ".join(suffix.split())
         credentials = credentials.strip()
@@ -423,6 +425,91 @@ def stn_names(target, drop=False, fl=True, comma=False):
             return first + " " + middle + " " + last + " " + suffix
         else:
             return [first, middle, last, suffix, credentials]
+
+def stn_name(target, comma=False, whitespace=True):
+    symbols = [
+        ".",
+        ":",
+        ";",
+        "(",
+        ")",
+        "*",
+        "\\",
+        "-",
+        "?",
+        "\'",
+        "\"",
+        "[",
+        "]",
+        "{",
+        "}",
+        "!",
+        "_",
+        "/",
+        "`",
+        "<",
+        ">"
+    ]
+    
+    credentials_list = [
+        "CPA",
+        "DR",
+        "ESQ",
+        "MBA",
+        "MD",
+        "PHD"
+    ]
+    
+    suffix_list = [
+        "SR",
+        "JR",
+        "IV",
+        "III",
+        "II"
+    ]
+    
+    if type(target) is str:
+        # Convert to uppercase
+        retarget = target.upper()
+        
+        # Remove symbols
+        for symbol in symbols:
+            retarget = retarget.replace(symbol, "").strip()
+            retarget = " ".join(retarget.split())
+        
+        # Remove MRS|MR|Owner at end
+        if re.search("[A-Z]?(MRS|MR|OWNER)$", retarget) is not None:
+            retarget = re.sub("(MRS|MR|OWNER)$", "", retarget)
+            retarget = " ".join(retarget.split())
+        
+        # Extract credentials
+        for credential in credentials_list:
+            if re.search(" [A-Z]?" + credential + "$", retarget) is not None:
+                retarget = re.sub(credential + "$", "", retarget)
+            elif re.search(" " + credential + " ", retarget) is not None:
+                retarget = re.sub(" " + credential + " ", " ", retarget)
+        if re.search(" [A-Z]?JD$", retarget) is not None:
+            retarget = re.sub("JD$", "", retarget)
+        
+        # Extract suffixes
+        for suff in suffix_list:
+            if re.search(" [A-Z]?" + suff + "$", retarget) is not None and re.search(" ZIV$", retarget) is None:
+                retarget = re.sub(suff + "$", "", retarget).strip()
+            elif re.search(" " + suff + "[, ]", retarget) is not None and re.search(" ZIV$", retarget) is None:
+                retarget = re.sub(" " + suff + "[, ]", ", ", retarget)
+                retarget = " ".join(retarget.split())
+        
+        if comma == False:
+            retarget = retarget.replace(",", "")
+        
+        # Strip white space
+        retarget = retarget.strip()
+        if whitespace:
+            retarget = " ".join(retarget.split())
+        else:
+            retarget = "".join(retarget.split())
+        
+        return retarget
 
 def soundex(target):
 
