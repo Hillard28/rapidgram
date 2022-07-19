@@ -236,6 +236,43 @@ def stn_street(target):
     else:
         return target
 
+def stn_city(target):
+    if type(target) is str:
+        # Convert to uppercase
+        retarget = target.upper()
+        
+        # Replace common descriptors
+        retarget = re.sub(" BCH( |$)", " BEACH ", retarget)
+        retarget = re.sub("^FT\.? ", "FORT ", retarget)
+        retarget = re.sub("^PT\.? ", "PORT ", retarget)
+        retarget = re.sub(" SPGS( |$)", " SPRINGS ", retarget)
+        retarget = re.sub("^SAINT ", "ST ", retarget)
+        
+        # Abbreviate cardinal directions
+        retarget = re.sub(" NORTH( |$)", " N ", retarget)
+        retarget = re.sub(" EAST( |$)", " E ", retarget)
+        retarget = re.sub(" SOUTH( |$)", " S ", retarget)
+        retarget = re.sub(" WEST( |$)", " W ", retarget)
+        
+        retarget = re.sub(" NORTHEAST( |$)", " NE ", retarget)
+        retarget = re.sub(" NORTH EAST( |$)", " NE ", retarget)
+        retarget = re.sub(" SOUTHEAST( |$)", " SE ", retarget)
+        retarget = re.sub(" SOUTH EAST( |$)", " SE ", retarget)
+        
+        retarget = re.sub(" NORTHWEST( |$)", " NW ", retarget)
+        retarget = re.sub(" NORTH WEST( |$)", " NW ", retarget)
+        retarget = re.sub(" SOUTHWEST( |$)", " SW ", retarget)
+        retarget = re.sub(" SOUTH WEST( |$)", " SW ", retarget)
+        
+        # Strip white space
+        retarget = retarget.strip()
+        retarget = " ".join(retarget.split())
+        
+        return retarget
+    
+    else:
+        return target
+
 def stn_phone(target):
     symbols = [
         ",",
