@@ -159,7 +159,7 @@ def stn_street(target):
         retarget = target.upper()
         
         # Remove suite numbers
-        retarget = re.sub(" (APT|FLOOR|FL|STE|SUITE|UNIT).*", "", retarget)
+        retarget = re.sub(" (APT|FLOOR|FL|STE|SUITE|UNIT)( |. ).*", "", retarget)
         
         # Remove punctuation
         retarget = retarget.replace("#", "")
