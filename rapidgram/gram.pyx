@@ -3,7 +3,7 @@
 from libcpp.string cimport string
 from libcpp cimport bool
 
-cdef extern from "gram.hpp":
+cdef extern from "cgram.cpp":
     float cratio(string, string, bool) nogil
     float cpartial_ratio(string, string, bool) nogil
     float ctoken(string, string) nogil
